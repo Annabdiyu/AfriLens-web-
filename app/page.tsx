@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import {
   Play,
+  Pause,
   Download,
   ScanSearch,
   BookOpen,
@@ -18,6 +19,10 @@ import {
   ExternalLink,
   Menu,
   X,
+  Maximize,
+  Minimize,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 
 /* ── Inline GitHub Icon (not available in this lucide version) ── */
@@ -37,6 +42,14 @@ function GithubIcon({ className }: { className?: string }) {
       <path d="M9 18c-4.51 2-5-2-7-2" />
     </svg>
   );
+}
+
+/* ── Format seconds → mm:ss ── */
+function formatTime(sec: number) {
+  if (!isFinite(sec) || sec < 0) return "0:00";
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
 /* ─────────────────────────────────────────────
@@ -130,7 +143,96 @@ function Navbar() {
    HERO SECTION
    ───────────────────────────────────────────── */
 function HeroSection() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const [hasStarted, setHasStarted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(1);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showControls, setShowControls] = useState(true);
+
+  /* ── Auto-hide controls after 3s of idle when playing ── */
+  const resetHideTimer = useCallback(() => {
+    setShowControls(true);
+    if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    if (isPlaying) {
+      hideTimerRef.current = setTimeout(() => setShowControls(false), 3000);
+    }
+  }, [isPlaying]);
+
+  useEffect(() => {
+    if (!isPlaying) {
+      setShowControls(true);
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    } else {
+      resetHideTimer();
+    }
+    return () => { if (hideTimerRef.current) clearTimeout(hideTimerRef.current); };
+  }, [isPlaying, resetHideTimer]);
+
+  /* ── Fullscreen change listener ── */
+  useEffect(() => {
+    const onFsChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", onFsChange);
+    return () => document.removeEventListener("fullscreenchange", onFsChange);
+  }, []);
+
+  /* ── Play / Pause ── */
+  const togglePlay = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) {
+      v.play();
+      setHasStarted(true);
+    } else {
+      v.pause();
+    }
+  };
+
+  /* ── Seek ── */
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    const v = videoRef.current;
+    if (!v || !duration) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    v.currentTime = pct * duration;
+  };
+
+  /* ── Volume ── */
+  const handleVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = parseFloat(e.target.value);
+    setVolume(val);
+    if (videoRef.current) {
+      videoRef.current.volume = val;
+      videoRef.current.muted = val === 0;
+      setIsMuted(val === 0);
+    }
+  };
+
+  const toggleMute = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setIsMuted(v.muted);
+  };
+
+  /* ── Fullscreen ── */
+  const toggleFullscreen = () => {
+    const el = containerRef.current;
+    if (!el) return;
+    if (!document.fullscreenElement) {
+      el.requestFullscreen?.();
+    } else {
+      document.exitFullscreen?.();
+    }
+  };
+
+  const progressPct = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
     <section
@@ -199,61 +301,161 @@ function HeroSection() {
           interactive, zero-inventory revenue engine.
         </p>
 
-        {/* Video Player */}
+        {/* ════════════════ VIDEO PLAYER ════════════════ */}
         <div
           className="relative max-w-3xl mx-auto mb-12 animate-scale-in"
           style={{ animationDelay: "0.4s" }}
         >
           <div className="video-player-glow rounded-2xl overflow-hidden">
-            {/* Video aspect ratio container */}
-            <div className="relative aspect-video bg-surface-elevated rounded-2xl overflow-hidden group cursor-pointer">
-              {/* Video background pattern */}
-              <div className="absolute inset-0 bg-gradient-to-br from-surface via-surface-elevated to-surface" />
-
-              {/* Decorative grid */}
-              <div
-                className="absolute inset-0 opacity-[0.03]"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)",
-                  backgroundSize: "40px 40px",
+            <div
+              ref={containerRef}
+              className="relative aspect-video bg-surface-elevated rounded-2xl overflow-hidden group"
+              onMouseMove={resetHideTimer}
+              onMouseLeave={() => isPlaying && setShowControls(false)}
+            >
+              {/* Video element */}
+              <video
+                ref={videoRef}
+                className={`absolute inset-0 w-full h-full rounded-2xl ${isFullscreen ? "object-contain" : "object-cover"}`}
+                src="/afrilens.mp4"
+                playsInline
+                preload="metadata"
+                onClick={togglePlay}
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+                onEnded={() => { setIsPlaying(false); setHasStarted(false); }}
+                onTimeUpdate={(e) => {
+                  setCurrentTime(e.currentTarget.currentTime);
+                  if (duration === 0 && e.currentTarget.duration > 0 && isFinite(e.currentTarget.duration)) {
+                    setDuration(e.currentTarget.duration);
+                  }
+                }}
+                onLoadedMetadata={(e) => {
+                  if (e.currentTarget.duration > 0 && isFinite(e.currentTarget.duration)) {
+                    setDuration(e.currentTarget.duration);
+                  }
+                }}
+                onDurationChange={(e) => {
+                  if (e.currentTarget.duration > 0 && isFinite(e.currentTarget.duration)) {
+                    setDuration(e.currentTarget.duration);
+                  }
                 }}
               />
 
-              {/* Center elements */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-                {/* Play button */}
-                <button
-                  onClick={() => setIsPlaying(!isPlaying)}
-                  className="relative mb-4 group/btn"
-                  aria-label="Play demo video"
+              {/* ── Initial overlay (before first play) ── */}
+              {!hasStarted && (
+                <div
+                  className="absolute inset-0 flex flex-col items-center justify-center z-20 bg-black/50 cursor-pointer transition-opacity duration-300"
+                  onClick={togglePlay}
                 >
-                  {/* Pulse ring */}
-                  <div className="absolute inset-0 rounded-full gradient-terracotta opacity-30 animate-ping" />
-                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full gradient-terracotta flex items-center justify-center shadow-2xl group-hover/btn:scale-110 transition-transform duration-300">
-                    <Play className="w-6 h-6 sm:w-8 sm:h-8 text-white ml-1" />
-                  </div>
-                </button>
-                <p className="text-sm text-muted-light font-medium">
-                  Watch the Demo
-                </p>
-              </div>
-
-              {/* Bottom bar — fake video controls */}
-              <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black/60 to-transparent flex items-end pb-3 px-4">
-                <div className="flex items-center gap-3 w-full">
-                  <div className="w-8 h-1 rounded-full bg-terracotta" />
-                  <div className="flex-1 h-1 rounded-full bg-white/10">
-                    <div className="w-1/3 h-full rounded-full gradient-terracotta" />
-                  </div>
-                  <span className="text-[10px] text-white/50 font-mono">
-                    2:34
-                  </span>
+                  <button className="relative mb-4 group/btn" aria-label="Play demo video">
+                    <div className="absolute inset-0 rounded-full gradient-terracotta opacity-30 animate-ping" />
+                    <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full gradient-terracotta flex items-center justify-center shadow-2xl group-hover/btn:scale-110 transition-transform duration-300">
+                      <Play className="w-6 h-6 sm:w-8 sm:h-8 text-white ml-1" />
+                    </div>
+                  </button>
+                  <p className="text-sm text-muted-light font-medium">Watch the Demo</p>
                 </div>
-              </div>
+              )}
+
+              {/* ── Custom Controls Bar ── */}
+              {hasStarted && (
+                <div
+                  className={`absolute bottom-0 left-0 right-0 z-30 transition-all duration-300 ${
+                    showControls ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"
+                  }`}
+                >
+                  {/* Gradient backdrop */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
+
+                  <div className="relative px-4 pb-3 pt-8">
+                    {/* ── Seekbar ── */}
+                    <div
+                      className="w-full h-1.5 rounded-full bg-white/15 cursor-pointer mb-3 group/seek hover:h-2.5 transition-all duration-200"
+                      onClick={handleSeek}
+                    >
+                      {/* Buffered / progress */}
+                      <div
+                        className="h-full rounded-full gradient-terracotta relative transition-all duration-150"
+                        style={{ width: `${progressPct}%` }}
+                      >
+                        {/* Thumb dot */}
+                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white shadow-lg shadow-black/40 opacity-0 group-hover/seek:opacity-100 transition-opacity duration-200" />
+                      </div>
+                    </div>
+
+                    {/* ── Bottom row: controls ── */}
+                    <div className="flex items-center justify-between gap-3">
+                      {/* Left side */}
+                      <div className="flex items-center gap-3">
+                        {/* Play / Pause */}
+                        <button
+                          onClick={(e) => { e.stopPropagation(); togglePlay(); }}
+                          className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors duration-200"
+                          aria-label={isPlaying ? "Pause" : "Play"}
+                        >
+                          {isPlaying ? (
+                            <Pause className="w-4 h-4 text-white" />
+                          ) : (
+                            <Play className="w-4 h-4 text-white ml-0.5" />
+                          )}
+                        </button>
+
+                        {/* Time */}
+                        <span className="text-[11px] sm:text-xs text-white/70 font-mono tabular-nums select-none">
+                          {formatTime(currentTime)}{" "}
+                          <span className="text-white/30">/</span>{" "}
+                          {formatTime(duration)}
+                        </span>
+                      </div>
+
+                      {/* Right side */}
+                      <div className="flex items-center gap-2">
+                        {/* Volume */}
+                        <div className="hidden sm:flex items-center gap-1.5 group/vol">
+                          <button
+                            onClick={(e) => { e.stopPropagation(); toggleMute(); }}
+                            className="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center transition-colors"
+                            aria-label={isMuted ? "Unmute" : "Mute"}
+                          >
+                            {isMuted || volume === 0 ? (
+                              <VolumeX className="w-4 h-4 text-white/70" />
+                            ) : (
+                              <Volume2 className="w-4 h-4 text-white/70" />
+                            )}
+                          </button>
+                          <input
+                            type="range"
+                            min="0"
+                            max="1"
+                            step="0.05"
+                            value={isMuted ? 0 : volume}
+                            onChange={handleVolume}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-0 group-hover/vol:w-20 transition-all duration-300 accent-[#C97D4F] h-1 cursor-pointer opacity-0 group-hover/vol:opacity-100"
+                          />
+                        </div>
+
+                        {/* Fullscreen */}
+                        <button
+                          onClick={(e) => { e.stopPropagation(); toggleFullscreen(); }}
+                          className="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center transition-colors"
+                          aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+                        >
+                          {isFullscreen ? (
+                            <Minimize className="w-4 h-4 text-white/70" />
+                          ) : (
+                            <Maximize className="w-4 h-4 text-white/70" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Corner accent */}
-              <div className="absolute top-4 left-4 flex items-center gap-2">
+              <div className="absolute top-4 left-4 flex items-center gap-2 z-20">
                 <div className="w-2 h-2 rounded-full bg-terracotta animate-pulse-glow" />
                 <span className="text-[10px] uppercase tracking-widest text-white/30 font-mono">
                   AfriLens Demo
