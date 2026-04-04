@@ -73,7 +73,8 @@ function Navbar() {
             Architecture
           </a>
           <a
-            href="#download"
+            href="/app-release.apk"
+            download="AfriLens.apk"
             className="text-sm px-4 py-2 rounded-full gradient-terracotta text-white font-medium hover:opacity-90 transition-opacity"
           >
             Download APK
@@ -108,7 +109,8 @@ function Navbar() {
             Architecture
           </a>
           <a
-            href="#download"
+            href="/app-release.apk"
+            download="AfriLens.apk"
             onClick={() => setOpen(false)}
             className="block text-sm px-4 py-2 rounded-full gradient-terracotta text-white font-medium text-center"
           >
