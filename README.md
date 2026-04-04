@@ -142,7 +142,7 @@ npm start
 | Repository | Description |
 |---|---|
 | [Kuriftu-AI-Cultural-Exploration-Platform](https://github.com/mosisafeyissa/Kuriftu-AI-Cultural-Exploration-Platform) | Full-stack application — Flutter mobile app, Django REST backend, AI/LLM integration, Chapa payments, Cloudinary media |
-| [AfriLens-web-](https://github.com/Annabdiyu/AfriLens-web-) | This repository — Landing page & marketing website |
+| [AfriLens-web](https://github.com/Annabdiyu/AfriLens-web) | This repository — Landing page & marketing website |
 
 ---
 
@@ -207,14 +207,8 @@ Acting as a personal concierge, the app provides a brief, captivating descriptio
         └──────────────┘
 ```
 
----
 
-## 👥 Team
-
-Built for the **Hospitality Hackathon 2026** at Kuriftu African Village.
-
----
 
 <p align="center">
-  <sub>Made with ❤️ for African cultural heritage</sub>
+  <sub>Hospitality Hackathon 2026</sub>
 </p>
