@@ -49,13 +49,8 @@ function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 glass">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <a href="#hero" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-lg gradient-terracotta flex items-center justify-center">
-            <Eye className="w-4 h-4 text-white" />
-          </div>
-          <span className="text-lg font-bold tracking-tight text-warm-white">
-            Afri<span className="text-gradient-gold">Lens</span>
-          </span>
+        <a href="#hero" className="flex items-center group">
+          <img src="/logo.png" alt="AfriLens" className="h-12 md:h-14 w-auto object-contain" />
         </a>
 
         {/* Desktop links */}
@@ -560,13 +555,8 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg gradient-terracotta flex items-center justify-center">
-              <Eye className="w-3.5 h-3.5 text-white" />
-            </div>
-            <span className="text-sm font-bold tracking-tight text-warm-white">
-              Afri<span className="text-gradient-gold">Lens</span>
-            </span>
+          <div className="flex items-center">
+            <img src="/logo.png" alt="AfriLens Logo" className="h-10 w-auto object-contain grayscale-0 group-hover:grayscale-0 transition-all opacity-80 hover:opacity-100" />
           </div>
 
           {/* Tagline */}
