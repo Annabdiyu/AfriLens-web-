@@ -52,7 +52,7 @@ function Navbar() {
         <a href="#hero" className="flex items-center gap-3 group">
           <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg border border-white/10 group-hover:scale-105 transition-transform flex-shrink-0">
             <img 
-              src="/afrilens_no_bg.png" 
+              src="/logo.png" 
               alt="AfriLens Logo" 
               className="w-full h-full object-cover" 
             />
@@ -567,7 +567,7 @@ function Footer() {
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg overflow-hidden border border-white/10 opacity-90 transition-opacity">
               <img 
-                src="/afrilens_no_bg.png" 
+                src="/logo.png" 
                 alt="AfriLens Logo" 
                 className="w-full h-full object-cover" 
               />
