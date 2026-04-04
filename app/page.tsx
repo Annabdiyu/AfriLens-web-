@@ -49,16 +49,15 @@ function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 glass">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <a href="#hero" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 flex items-center justify-center">
+        <a href="#hero" className="flex items-center gap-3 group">
+          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg border border-white/10 group-hover:scale-105 transition-transform flex-shrink-0">
             <img 
               src="/logo.png" 
               alt="AfriLens Logo" 
-              className="w-full h-full object-contain opacity-90 group-hover:opacity-100 transition-all group-hover:scale-105" 
-              style={{ filter: 'invert(1) hue-rotate(180deg) contrast(1.2)', mixBlendMode: 'screen' }}
+              className="w-full h-full object-cover" 
             />
           </div>
-          <span className="text-lg font-bold tracking-tight text-warm-white">
+          <span className="text-2xl font-bold tracking-tight text-warm-white">
             Afri<span className="text-gradient-gold">Lens</span>
           </span>
         </a>
@@ -565,16 +564,15 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 flex items-center justify-center">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg overflow-hidden border border-white/10 opacity-90 transition-opacity">
               <img 
                 src="/logo.png" 
                 alt="AfriLens Logo" 
-                className="w-full h-full object-contain opacity-80" 
-                style={{ filter: 'invert(1) hue-rotate(180deg)', mixBlendMode: 'screen' }}
+                className="w-full h-full object-cover" 
               />
             </div>
-            <span className="text-sm font-bold tracking-tight text-warm-white">
+            <span className="text-base font-bold tracking-tight text-warm-white">
               Afri<span className="text-gradient-gold">Lens</span>
             </span>
           </div>
