@@ -49,12 +49,14 @@ function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 glass">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <a href="#hero" className="flex items-center gap-2 group">
-          <img 
-            src="/afrilens_no_bg.png" 
-            alt="AfriLens Logo" 
-            className="h-10 w-auto object-contain group-hover:scale-105 transition-transform drop-shadow-lg" 
-          />
+        <a href="#hero" className="flex items-center gap-3 group">
+          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg border border-white/10 group-hover:scale-105 transition-transform flex-shrink-0">
+            <img 
+              src="/afrilens_no_bg.png" 
+              alt="AfriLens Logo" 
+              className="w-full h-full object-cover" 
+            />
+          </div>
           <span className="text-2xl font-bold tracking-tight text-warm-white">
             Afri<span className="text-gradient-gold">Lens</span>
           </span>
@@ -562,12 +564,14 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <img 
-              src="/afrilens_no_bg.png" 
-              alt="AfriLens Logo" 
-              className="h-8 w-auto object-contain opacity-90 transition-opacity" 
-            />
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg overflow-hidden border border-white/10 opacity-90 transition-opacity">
+              <img 
+                src="/afrilens_no_bg.png" 
+                alt="AfriLens Logo" 
+                className="w-full h-full object-cover" 
+              />
+            </div>
             <span className="text-base font-bold tracking-tight text-warm-white">
               Afri<span className="text-gradient-gold">Lens</span>
             </span>
