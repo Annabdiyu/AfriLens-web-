@@ -521,6 +521,121 @@ function HeroSection() {
 }
 
 /* ─────────────────────────────────────────────
+   QR ROOM TOUR SECTION
+   ───────────────────────────────────────────── */
+const qrRooms = [
+  { src: "/qr-room-1.jpg", label: "Villa 1" },
+  { src: "/qr-room-2.jpg", label: "Villa 2" },
+  { src: "/qr-room-3.jpg", label: "Villa 3" },
+];
+
+function QRRoomTourSection() {
+  return (
+    <section id="qr-room-tour" className="relative py-32 overflow-hidden">
+      {/* Background accent */}
+      <div className="absolute inset-0 bg-surface/40" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] gradient-radial-gold opacity-15 pointer-events-none" />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-light mb-6">
+            <Eye className="w-3.5 h-3.5 text-gold" />
+            <span className="text-xs font-medium tracking-wider uppercase text-gold-light">
+              Interactive Experience
+            </span>
+          </div>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight mb-6">
+            QR Room <span className="text-gradient-gold">Tour</span>
+          </h2>
+          <p className="max-w-2xl mx-auto text-muted-light text-lg leading-relaxed">
+            Scan. Explore. Discover the story behind every room.
+          </p>
+        </div>
+
+        {/* QR Cards — Side by Side */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-8 mb-16">
+          {qrRooms.map((room, i) => (
+            <div
+              key={room.label}
+              className="group relative card-hover rounded-3xl glass-light p-6 lg:p-8 flex flex-col items-center text-center"
+            >
+              {/* Top accent line */}
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold to-transparent opacity-40" />
+
+              {/* Step number watermark */}
+              <div className="absolute top-4 right-6 text-6xl font-black text-white/[0.03] select-none">
+                {String(i + 1).padStart(2, "0")}
+              </div>
+
+              {/* Room label */}
+              <div className="inline-flex items-center gap-2 mb-5">
+                <div className="w-2 h-2 rounded-full bg-terracotta animate-pulse-glow" />
+                <span className="text-sm font-bold text-warm-white tracking-tight">
+                  {room.label}
+                </span>
+              </div>
+
+              {/* QR Code Image */}
+              <div className="relative w-full max-w-[220px] aspect-square rounded-2xl overflow-hidden bg-white p-4 mb-5 group-hover:scale-105 transition-transform duration-500 shadow-lg shadow-black/30">
+                <img
+                  src={room.src}
+                  alt={`QR code for ${room.label}`}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+
+              {/* Scan label */}
+              <p className="text-xs text-muted-light">
+                Scan to explore
+              </p>
+
+              {/* Bottom hover line */}
+              <div className="mt-6 h-px w-0 group-hover:w-full bg-gradient-to-r from-transparent via-gold/30 to-transparent transition-all duration-700" />
+            </div>
+          ))}
+        </div>
+
+        {/* Description Block */}
+        <div className="relative max-w-4xl mx-auto rounded-3xl glass-light p-8 lg:p-12">
+          {/* Top accent */}
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-terracotta to-transparent opacity-50" />
+
+          {/* Icon + title row */}
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-terracotta/20 to-terracotta-dark/5 flex items-center justify-center flex-shrink-0">
+              <ScanSearch className="w-6 h-6 text-terracotta" />
+            </div>
+            <div>
+              <h3 className="text-xl sm:text-2xl font-bold text-warm-white tracking-tight">
+                The QR Room Tour Experience
+              </h3>
+              <p className="text-sm font-semibold text-terracotta tracking-wide">
+                Scan → Story → Buy
+              </p>
+            </div>
+          </div>
+
+          {/* Body text */}
+          <p className="text-muted-light leading-relaxed text-[15px] sm:text-base">
+            The QR Room Tour serves as the frictionless front door to the AfriLens experience,
+            transforming a static hotel stay into an interactive digital museum the second a guest
+            arrives. By opening the AfriLens app and scanning a beautifully crafted wooden QR block
+            on their nightstand, guests unlock an immersive digital room tour. Acting as a personal
+            concierge, the app provides a brief, captivating description of the specific history and
+            rich culture behind their villa&apos;s design. This guided experience organically gamifies the
+            physical space, highlighting the unique artifacts around them and seamlessly driving guests
+            toward high-margin e-commerce purchases before they even unpack. It is the perfect
+            execution of our core loop:{" "}
+            <span className="text-gold font-semibold">&quot;Scan → Story → Buy&quot;</span>
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────
    FEATURES SECTION  — "Why It Wins"
    ───────────────────────────────────────────── */
 const features = [
@@ -781,7 +896,7 @@ function Footer() {
 
           {/* Tagline */}
           <p className="text-sm text-muted text-center">
-            Built with ❤️ for hospitality hackathon 2026
+            Hospitality hackathon 2026
           </p>
 
           {/* Links */}
@@ -809,6 +924,7 @@ export default function Home() {
     <main className="flex-1">
       <Navbar />
       <HeroSection />
+      <QRRoomTourSection />
       <FeaturesSection />
       <ArchitectureSection />
       <Footer />
