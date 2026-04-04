@@ -265,7 +265,8 @@ function HeroSection() {
         >
           {/* Primary — Download APK */}
           <a
-            href="#"
+            href="/app-release.apk"
+            download="AfriLens.apk"
             className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-2xl gradient-terracotta text-white font-semibold text-base shadow-lg shadow-terracotta/20 hover:shadow-terracotta/40 hover:scale-[1.02] transition-all duration-300 overflow-hidden"
           >
             <div className="absolute inset-0 animate-shimmer" />
