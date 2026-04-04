@@ -579,7 +579,7 @@ function Footer() {
 
           {/* Tagline */}
           <p className="text-sm text-muted text-center">
-            Built with ❤️ for Kuriftu African Village — Hackathon 2025
+            Built with ❤️ for hospitality hackathon 2026
           </p>
 
           {/* Links */}
