@@ -279,7 +279,9 @@ function HeroSection() {
 
           {/* Secondary — GitHub */}
           <a
-            href="#"
+            href="https://github.com/mosisafeyissa/Kuriftu-AI-Cultural-Exploration-Platform.git"
+            target="_blank"
+            rel="noopener noreferrer"
             className="group inline-flex items-center gap-3 px-8 py-4 rounded-2xl glass-light text-warm-white font-semibold text-base hover:bg-white/[0.06] transition-all duration-300"
           >
             <GithubIcon className="w-5 h-5" />
@@ -575,7 +577,9 @@ function Footer() {
           {/* Links */}
           <div className="flex items-center gap-6">
             <a
-              href="#"
+              href="https://github.com/mosisafeyissa/Kuriftu-AI-Cultural-Exploration-Platform.git"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-sm text-muted-light hover:text-warm-white transition-colors"
             >
               <GithubIcon className="w-5 h-5" />
