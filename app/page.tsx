@@ -51,7 +51,7 @@ function Navbar() {
         {/* Logo */}
         <a href="#hero" className="flex items-center gap-2 group">
           <img 
-            src="/logo.png" 
+            src="/afrilens_no_bg.png" 
             alt="AfriLens Logo" 
             className="h-10 w-auto object-contain group-hover:scale-105 transition-transform drop-shadow-lg" 
           />
@@ -564,7 +564,7 @@ function Footer() {
           {/* Logo */}
           <div className="flex items-center gap-2">
             <img 
-              src="/logo.png" 
+              src="/afrilens_no_bg.png" 
               alt="AfriLens Logo" 
               className="h-8 w-auto object-contain opacity-90 transition-opacity" 
             />
